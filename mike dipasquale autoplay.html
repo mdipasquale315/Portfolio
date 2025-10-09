@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Michael DiPasquale – Full Stack Developer</title>
+  <meta name="description" content="Michael DiPasquale – Full‑stack developer. Projects, skills, and contact info." />
+  <meta property="og:title" content="Michael DiPasquale – Full Stack Developer" />
+  <meta property="og:description" content="Projects, skills, and contact info." />
+  <meta property="og:type" content="website" />
+  <style>
+    /* Base / tokens */
+    *,*::before,*::after{box-sizing:border-box}
+    :root{
+      --primary:#6366f1;--primary-dark:#4f46e5;--secondary:#0ea5e9;--accent:#f59e0b;
+      --text-light:#94a3b8;--text-mid:#64748b;--text-dark:#0f172a;--bg-dark:#0f172a;--bg-darker:#1e293b;
+      --glass:rgba(255,255,255,.1);--glass-border:rgba(255,255,255,.2)
+    }
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;
+      background:linear-gradient(135deg,var(--bg-dark) 0%,var(--bg-darker) 100%);
+      color:#fff;line-height:1.6;overflow-x:hidden
+    }
+
+    /* Skip link */
+    .skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+    .skip-link:focus{left:12px;top:12px;width:auto;height:auto;background:#fff;color:#111;padding:.6rem 1rem;border-radius:.5rem;z-index:10000}
+
+    /* Background particles */
+    .bg-animation{position:fixed;inset:0;z-index:-1;opacity:.28}
+    .particle{position:absolute;width:4px;height:4px;background:var(--primary);border-radius:50%;animation:float 6s ease-in-out infinite}
+    @keyframes float{0%,100%{transform:translateY(0) rotate(0);opacity:0}50%{transform:translateY(-100px) rotate(180deg);opacity:1}}
+
+    /* Nav */
+    nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:1000;backdrop-filter:blur(20px);background:var(--glass);border:1px solid var(--glass-border);border-radius:50px;padding:10px 30px;transition:all .3s ease}
+    nav:hover{background:rgba(255,255,255,.15);transform:translateX(-50%) translateY(-2px);box-shadow:0 20px 40px rgba(99,102,241,.3)}
+    .nav-links{display:flex;gap:30px;list-style:none;margin:0}
+    .nav-links a{color:#fff;text-decoration:none;font-weight:600;font-size:14px;position:relative}
+    .nav-links a:hover{color:var(--primary)}
+    .nav-links a::after{content:"";position:absolute;bottom:-6px;left:50%;width:0;height:2px;background:var(--primary);transition:width .3s ease;transform:translateX(-50%)}
+    .nav-links a:hover::after{width:100%}
+
+    /* Sections */
+    section{padding:100px 20px;max-width:1200px;margin:0 auto}
+    .hero{min-height:100vh;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden}
+    .hero-content{max-width:800px;padding:0 20px;animation:fadeInUp 1s ease-out}
+    .hero-title{font-size:clamp(3rem,8vw,6rem);font-weight:800;margin:0 0 20px;background:linear-gradient(135deg,#fff,var(--primary),var(--secondary));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:glow 2s ease-in-out infinite alternate}
+    @keyframes glow{from{filter:drop-shadow(0 0 20px rgba(99,102,241,.3))}to{filter:drop-shadow(0 0 30px rgba(99,102,241,.5))}}
+    .hero-subtitle{font-size:1.5rem;color:var(--text-mid);margin:0 0 20px}
+    .hero-description{font-size:1.1rem;color:#cbd5e1;margin:0 auto 40px;max-width:640px}
+    .cta-button{display:inline-block;padding:14px 34px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;text-decoration:none;border-radius:999px;font-weight:700;font-size:1.05rem;transition:transform .2s ease,box-shadow .2s ease;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent}
+    .cta-button::before{content:"";position:absolute;inset:0;left:-100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transition:left .5s}
+    .cta-button:active{transform:scale(.98)}
+    .cta-button:hover{transform:translateY(-3px);box-shadow:0 20px 40px rgba(99,102,241,.4)}
+    .cta-button:hover::before{left:100%}
+
+    .section-title{font-size:clamp(2.2rem,5vw,3rem);font-weight:800;text-align:center;margin:0 0 60px;background:linear-gradient(135deg,#fff,var(--primary));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+    /* Carousel */
+    .carousel-container{position:relative;overflow:hidden;margin-top:28px;touch-action:pan-y pinch-zoom}
+    .carousel-track{display:flex;will-change:transform;transition:transform .5s cubic-bezier(.4,0,.2,1);touch-action:pan-y}
+    .carousel-item{flex:0 0 100%;padding:0 15px;user-select:none;-webkit-user-select:none}
+    @media (min-width:768px){.carousel-item{flex:0 0 50%}}
+    @media (min-width:1024px){.carousel-item{flex:0 0 33.333%}}
+
+    .skill-card,.project-card,.certificate-card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:20px;transition:transform .25s ease,box-shadow .25s ease,background .25s ease;position:relative;overflow:hidden;height:100%;-webkit-tap-highlight-color:transparent}
+    .skill-card::before,.certificate-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--secondary),var(--accent))}
+    .skill-card,.certificate-card{padding:40px 30px;text-align:center}
+    .skill-card:hover,.project-card:hover,.certificate-card:hover{transform:translateY(-8px);background:rgba(255,255,255,.15);box-shadow:0 30px 60px rgba(99,102,241,.3)}
+    
+    .certificate-icon{width:70px;height:70px;margin:0 auto 20px;background:linear-gradient(135deg,var(--accent),var(--secondary));border-radius:15px;display:grid;place-items:center;font-size:32px}
+    .certificate-title{font-size:1.35rem;font-weight:700;margin:0 0 8px;color:#fff}
+    .certificate-issuer{color:var(--secondary);font-size:1rem;font-weight:600;margin:0 0 10px}
+    .certificate-date{color:var(--text-mid);font-size:.9rem;margin:0 0 16px}
+    .certificate-link{display:inline-block;padding:10px 20px;border:1px solid var(--accent);color:var(--accent);text-decoration:none;border-radius:999px;font-weight:700;transition:all .2s ease;-webkit-tap-highlight-color:transparent}
+    .certificate-link:active{transform:scale(.95)}
+    .certificate-link:hover{background:var(--accent);color:#fff;transform:translateY(-2px)}
+    .skill-icon{width:60px;height:60px;margin:0 auto 16px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:15px;display:grid;place-items:center;font-size:26px}
+    .skill-title{font-size:1.35rem;font-weight:700;margin:0 0 10px;color:#fff}
+    .skill-description{color:var(--text-mid);font-size:1rem}
+
+    .project-image{height:200px;background:linear-gradient(135deg,var(--primary),var(--secondary));display:grid;place-items:center;font-size:3rem;color:#fff}
+    .project-content{padding:26px}
+    .project-title{font-size:1.35rem;font-weight:700;margin:0 0 10px;color:#fff}
+    .project-description{color:var(--text-mid);margin:0 0 16px}
+    .project-tech{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px}
+    .tech-tag{background:rgba(99,102,241,.2);color:var(--primary);padding:6px 12px;border-radius:20px;font-size:.9rem;font-weight:600}
+    .project-links{display:flex;gap:12px}
+    .project-link{padding:10px 18px;border:1px solid var(--primary);color:var(--primary);text-decoration:none;border-radius:999px;font-weight:700;transition:all .2s ease;-webkit-tap-highlight-color:transparent}
+    .project-link:active{transform:scale(.95)}
+    .project-link:hover{background:var(--primary);color:#fff;transform:translateY(-2px)}
+    .project-link[aria-disabled="true"]{opacity:.5;cursor:not-allowed}
+    .project-link[aria-disabled="true"]:hover{background:transparent;color:var(--primary);transform:none}
+    .project-link[aria-disabled="true"]:active{transform:none}
+
+    .carousel-controls{display:flex;justify-content:center;align-items:center;gap:16px;margin-top:28px}
+    .carousel-btn{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:999px;width:50px;height:50px;display:grid;place-items:center;color:#fff;cursor:pointer;font-size:18px;transition:transform .2s ease,box-shadow .2s ease,background .2s ease;-webkit-tap-highlight-color:transparent}
+    .carousel-btn:active{transform:scale(.95)}
+    .carousel-btn:hover{background:var(--primary);transform:translateY(-2px);box-shadow:0 10px 20px rgba(99,102,241,.3)}
+    .carousel-dots{display:flex;gap:10px}
+    .carousel-dot{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.35);border:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .carousel-dot:active{transform:scale(.9)}
+    .carousel-dot[aria-current="true"]{background:var(--primary);box-shadow:0 0 15px rgba(99,102,241,.5);transform:scale(1.18)}
+
+    /* Contact */
+    .contact{text-align:center;background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:30px;margin:50px 20px;padding:70px 34px}
+    .contact-links{display:flex;justify-content:center;gap:18px;margin-top:30px;flex-wrap:wrap}
+    .contact-link{display:flex;align-items:center;gap:10px;padding:14px 22px;background:var(--glass);border:1px solid var(--glass-border);border-radius:999px;color:#fff;text-decoration:none;font-weight:700;-webkit-tap-highlight-color:transparent}
+    .contact-link:active{transform:scale(.95)}
+    .contact-link:hover{background:var(--primary);transform:translateY(-2px);box-shadow:0 15px 30px rgba(99,102,241,.4)}
+
+    /* Animations + progressive reveal */
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+    .reveal.is-visible{opacity:1;transform:translateY(0)}
+
+    /* Responsive tweaks */
+    @media (max-width:768px){
+      .nav-links{gap:20px}
+      .nav-links a{font-size:13px}
+      .contact-links{flex-direction:column;align-items:center}
+      .carousel-item{flex:0 0 100%}
+    }
+
+    /* Motion safety */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none!important;transition:none!important}
+      .bg-animation{display:none}
+      html{scroll-behavior:auto}
+    }
+
+    /* Scroll indicator */
+    .scroll-indicator{position:fixed;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--primary),var(--secondary),var(--accent));transform-origin:left;transform:scaleX(0);z-index:9999}
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#home">Skip to content</a>
+  <div class="scroll-indicator" role="presentation" aria-hidden="true"></div>
+  <div class="bg-animation" id="bgAnimation" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <nav aria-label="Primary">
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#certificates">Certificates</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section id="home" class="hero" aria-label="Intro">
+    <div class="hero-content">
+      <h1 class="hero-title">Michael DiPasquale</h1>
+      <p class="hero-subtitle" role="doc-subtitle">Full Stack Developer</p>
+      <p class="hero-description">Crafting digital experiences with modern web technologies. Passionate about clean code, innovative solutions, and turning ideas into reality.</p>
+      <a href="#projects" class="cta-button">View My Work</a>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" aria-labelledby="skills-title">
+    <h2 id="skills-title" class="section-title">Skills & Expertise</h2>
+    <div class="carousel-container" aria-roledescription="carousel">
+      <div class="carousel-track" id="skillsTrack" aria-live="polite"></div>
+      <div class="carousel-controls">
+        <button class="carousel-btn" id="skillsPrev" aria-label="Previous skills slide" title="Previous">←</button>
+        <div class="carousel-dots" id="skillsDots" role="tablist" aria-label="Skills slides"></div>
+        <button class="carousel-btn" id="skillsNext" aria-label="Next skills slide" title="Next">→</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" aria-labelledby="projects-title">
+    <h2 id="projects-title" class="section-title">Featured Projects</h2>
+    <div class="carousel-container" aria-roledescription="carousel">
+      <div class="carousel-track" id="projectsTrack" aria-live="polite"></div>
+      <div class="carousel-controls">
+        <button class="carousel-btn" id="projectsPrev" aria-label="Previous project slide" title="Previous">←</button>
+        <div class="carousel-dots" id="projectsDots" role="tablist" aria-label="Project slides"></div>
+        <button class="carousel-btn" id="projectsNext" aria-label="Next project slide" title="Next">→</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Certificates -->
+  <section id="certificates" aria-labelledby="certificates-title">
+    <h2 id="certificates-title" class="section-title">Certificates & Achievements</h2>
+    <div class="carousel-container" aria-roledescription="carousel">
+      <div class="carousel-track" id="certificatesTrack" aria-live="polite"></div>
+      <div class="carousel-controls">
+        <button class="carousel-btn" id="certificatesPrev" aria-label="Previous certificate slide" title="Previous">←</button>
+        <div class="carousel-dots" id="certificatesDots" role="tablist" aria-label="Certificate slides"></div>
+        <button class="carousel-btn" id="certificatesNext" aria-label="Next certificate slide" title="Next">→</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="contact" aria-labelledby="contact-title">
+    <h2 id="contact-title" class="section-title">Let's Work Together</h2>
+    <p style="color:var(--text-mid);font-size:1.15rem;max-width:640px;margin:0 auto">Ready to bring your ideas to life? I'm always excited to work on new projects and collaborate with amazing people.</p>
+    <div class="contact-links">
+      <a href="mailto:mdipasquale315@gmail.com" class="contact-link"><span aria-hidden="true">📧</span><span>Email</span></a>
+      <a href="https://linkedin.com/in/michael-dipasquale-7883271a3" target="_blank" rel="noopener" class="contact-link"><span aria-hidden="true">💼</span><span>LinkedIn</span></a>
+      <a href="https://github.com/mdipasquale315" target="_blank" rel="noopener" class="contact-link"><span aria-hidden="true">💻</span><span>GitHub</span></a>
+      <a href="https://twitter.com" target="_blank" rel="noopener" class="contact-link"><span aria-hidden="true">🐦</span><span>Twitter</span></a>
+      <a href="https://codepen.io/mdipasquale315" target="_blank" rel="noopener" class="contact-link"><span aria-hidden="true">🖊️</span><span>CodePen</span></a>
+    </div>
+  </section>
+
+  <script>
+    // Skills array
+    const skillsData = [
+      {
+        icon: '🚀',
+        title: 'Frontend Development',
+        description: 'React, Vue.js, TypeScript, Next.js, Tailwind CSS, and modern JavaScript frameworks'
+      },
+      {
+        icon: '⚡',
+        title: 'Backend Development', 
+        description: 'Node.js, Python, Express, Django, RESTful APIs, and microservices architecture'
+      },
+      {
+        icon: '💾',
+        title: 'Database & Cloud',
+        description: 'MongoDB, PostgreSQL, AWS, Docker, Kubernetes, and serverless deployments'
+      },
+      {
+        icon: '⛓',
+        title: 'Blockchain',
+        description: 'Solidity, dApps, Staking, Web3, DAOs'
+      },
+      {
+        icon: '🎨',
+        title: 'UI/UX Design',
+        description: 'Figma, Adobe Creative Suite, responsive design, user research, and prototyping'
+      },
+      {
+        icon: '🔧',
+        title: 'DevOps',
+        description: 'CI/CD pipelines, Jenkins, GitHub Actions, monitoring, and infrastructure as code'
+      }
+    ];
+
+    // Projects array
+    const projectsData = [
+      {
+        emoji: '🧠',
+        title: 'Smartbrain',
+        description: 'A smart image recognition application.',
+        technologies: ['Node.js', 'React', 'Clarifai API', 'PostgreSQL'],
+        liveUrl: 'https://smart-brain-frontend-7xlb.onrender.com/',
+        githubUrl: 'https://github.com/mdipasquale315/smart-brain-frontend',
+        githubBackendUrl: 'https://github.com/mdipasquale315/smart-brain-backend'
+      },
+      {
+        emoji: '🤖',
+        title: 'Robofriends',
+        description: 'A fun cartoon robot email directory.',
+        technologies: ['React', 'Vite', 'HTML', 'CSS'],
+        liveUrl: 'https://mdipasquale315.github.io/robofriends-4/',
+        githubUrl: 'https://github.com/mdipasquale315/robofriends-4'
+      }
+    ];
+
+    // Certificates array
+    const certificatesData = [
+      {
+        icon: '🌐',
+        title: 'Complete Web Developer in 2025',
+        issuer: 'Zero To Mastery',
+        date: '2025',
+        credentialUrl: 'https://academy.zerotomastery.io/courses/697434/certificate?certificate_first_issued=true'
+      },
+      {
+        icon: '⚛️',
+        title: 'Complete Rust Developer in 2025',
+        issuer: 'Zero To Mastery',
+        date: '2025',
+        credentialUrl: 'https://academy.zerotomastery.io/courses/1363752/certificate?certificate_first_issued=true'
+      },
+      {
+        icon: '🎓',
+        title: 'Solidity, Ethereum and Blockchain: The Complete Developer Guide',
+        issuer: 'Zero To Mastery',
+        date: '2025',
+        credentialUrl: 'https://academy.zerotomastery.io/courses/1676407/certificate?certificate_first_issued=true'
+      }
+    ];
+
+    // Utilities
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Particles
+    function createParticles(){
+      if(prefersReducedMotion) return;
+      const container = document.getElementById('bgAnimation');
+      const count = 40;
+      for(let i=0;i<count;i++){
+        const p=document.createElement('div');
+        p.className='particle';
+        p.style.left=Math.random()*100+'%';
+        p.style.top=Math.random()*100+'%';
+        p.style.animationDelay=Math.random()*6+'s';
+        p.style.animationDuration=(3+Math.random()*3)+'s';
+        container.appendChild(p);
+      }
+    }
+
+    // Scroll progress
+    function setupScrollIndicator(){
+      const bar=document.querySelector('.scroll-indicator');
+      let ticking=false;
+      function update(){
+        const max = (document.documentElement.scrollHeight - window.innerHeight);
+        const progress = max>0 ? (window.scrollY / max) : 0;
+        bar.style.transform = `scaleX(${progress})`;
+        ticking=false;
+      }
+      window.addEventListener('scroll',()=>{ 
+        if(!ticking){ 
+          requestAnimationFrame(update); 
+          ticking=true; 
+        } 
+      });
+      update();
+    }
+
+    // Render skill card
+    function renderSkillItem(skill) {
+      return `
+        <div class="skill-card">
+          <div class="skill-icon">${skill.icon}</div>
+          <h3 class="skill-title">${skill.title}</h3>
+          <p class="skill-description">${skill.description}</p>
+        </div>
+      `;
+    }
+
+    // Render project card
+    function renderProjectItem(project) {
+      return `
+        <div class="project-card">
+          <div class="project-image">${project.emoji}</div>
+          <div class="project-content">
+            <h3 class="project-title">${project.title}</h3>
+            <p class="project-description">${project.description}</p>
+            <div class="project-tech">
+              ${project.technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
+            </div>
+            <div class="project-links">
+              ${project.liveUrl ? 
+                `<a href="${project.liveUrl}" class="project-link" target="_blank" rel="noopener">Live Demo</a>` : 
+                `<a href="#" class="project-link" aria-disabled="true">Live Demo</a>`
+              }
+              ${project.githubUrl ? 
+                `<a href="${project.githubUrl}" class="project-link" target="_blank" rel="noopener">GitHub</a>` : 
+                ''
+              }
+              ${project.githubBackendUrl ? 
+                `<a href="${project.githubBackendUrl}" class="project-link" target="_blank" rel="noopener">Backend</a>` : 
+                ''
+              }
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Render certificate card
+    function renderCertificateItem(cert) {
+      return `
+        <div class="certificate-card">
+          <div class="certificate-icon">${cert.icon}</div>
+          <h3 class="certificate-title">${cert.title}</h3>
+          <p class="certificate-issuer">${cert.issuer}</p>
+          <p class="certificate-date">${cert.date}</p>
+          ${cert.credentialUrl && cert.credentialUrl !== '#' ? 
+            `<a href="${cert.credentialUrl}" class="certificate-link" target="_blank" rel="noopener">View Credential</a>` : 
+            ''
+          }
+        </div>
+      `;
+    }
+
+    // Carousel class
+    class Carousel{
+      constructor({trackId, dotsId, prevBtnId, nextBtnId, items, renderFunction}){
+        this.track = document.getElementById(trackId);
+        this.dotsContainer = document.getElementById(dotsId);
+        this.prevBtn = document.getElementById(prevBtnId);
+        this.nextBtn = document.getElementById(nextBtnId);
+        this.itemsData = items;
+        this.renderFunction = renderFunction;
+        this.currentIndex = 0;
+        this.itemsPerView = this.getItemsPerView();
+        this.isTransitioning = false;
+        
+        // Touch handling
+        this.touchStartX = 0;
+        this.touchEndX = 0;
+        this.touchStartY = 0;
+        this.touchEndY = 0;
+        this.minSwipeDistance = 50;
+        
+        this.populate();
+        this.createLoop();
+        this.createDots();
+        this.update(true);
+        this.bind();
+        this.setupTouch();
+        
+        window.addEventListener('resize', () => {
+          const newPerView = this.getItemsPerView();
+          if(newPerView !== this.itemsPerView){
+            this.itemsPerView = newPerView;
+            this.createLoop();
+            this.createDots();
+            this.update(true);
+          }
+        });
+      }
+
+      getItemsPerView(){ 
+        const w = window.innerWidth; 
+        return w >= 1024 ? 3 : (w >= 768 ? 2 : 1); 
+      }
+
+      populate(){
+        this.original = this.itemsData.map(item => {
+          const wrap = document.createElement('div');
+          wrap.className = 'carousel-item reveal';
+          wrap.innerHTML = this.renderFunction(item);
+          return wrap;
+        });
+      }
+
+      createLoop(){
+        this.track.innerHTML = '';
+        const clonesNeeded = Math.max(this.itemsPerView, this.original.length);
+        
+        for(let i = this.original.length - clonesNeeded; i < this.original.length; i++){
+          const cloneIndex = i < 0 ? this.original.length + i : i;
+          this.track.appendChild(this.original[cloneIndex].cloneNode(true));
+        }
+        
+        this.original.forEach(el => this.track.appendChild(el.cloneNode(true)));
+        
+        for(let i = 0; i < clonesNeeded; i++){
+          this.track.appendChild(this.original[i % this.original.length].cloneNode(true));
+        }
+        
+        this.allItems = Array.from(this.track.children);
+        this.startIndex = clonesNeeded;
+        this.currentIndex = this.startIndex;
+        
+        this.observeReveal();
+      }
+
+      createDots(){
+        this.dotsContainer.innerHTML = '';
+        const totalSlides = this.original.length;
+        
+        for(let i = 0; i < totalSlides; i++){
+          const b = document.createElement('button');
+          b.className = 'carousel-dot';
+          b.type = 'button';
+          b.setAttribute('role', 'tab');
+          b.setAttribute('aria-label', `Go to slide ${i + 1} of ${totalSlides}`);
+          b.addEventListener('click', () => this.goTo(i));
+          this.dotsContainer.appendChild(b);
+        }
+      }
+
+      observeReveal(){
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(e => { 
+            if(e.isIntersecting){ 
+              e.target.classList.add('is-visible'); 
+              io.unobserve(e.target); 
+            } 
+          });
+        }, {threshold: .15, rootMargin: '0px 0px -40px 0px'});
+        
+        this.track.querySelectorAll('.reveal').forEach(el => io.observe(el));
+      }
+
+      translate(){
+        const x = -(this.currentIndex * (100 / this.itemsPerView));
+        this.track.style.transform = `translateX(${x}%)`;
+      }
+
+      update(immediate = false){
+        if(immediate){
+          const t = this.track; 
+          const prev = t.style.transition; 
+          t.style.transition = 'none';
+          this.translate(); 
+          t.getBoundingClientRect(); 
+          t.style.transition = prev || 'transform .5s cubic-bezier(.4,0,.2,1)';
+        } else { 
+          this.translate(); 
+        }
+        
+        const real = this.realIndex();
+        Array.from(this.dotsContainer.children).forEach((dot, i) => {
+          dot.setAttribute('aria-current', i === real ? 'true' : 'false');
+        });
+      }
+
+      realIndex(){ 
+        let idx = (this.currentIndex - this.startIndex) % this.original.length; 
+        return idx < 0 ? idx + this.original.length : idx; 
+      }
+
+      prev(){ 
+        if(this.isTransitioning) return; 
+        this.isTransitioning = true; 
+        this.currentIndex--; 
+        this.update(); 
+        
+        setTimeout(() => { 
+          if(this.currentIndex < this.startIndex){ 
+            this.currentIndex = this.startIndex + this.original.length - 1; 
+            this.update(true);
+          } 
+          this.isTransitioning = false; 
+        }, 500); 
+      }
+
+      next(){ 
+        if(this.isTransitioning) return; 
+        this.isTransitioning = true; 
+        this.currentIndex++; 
+        this.update(); 
+        
+        setTimeout(() => { 
+          if(this.currentIndex >= this.startIndex + this.original.length){ 
+            this.currentIndex = this.startIndex; 
+            this.update(true);
+          } 
+          this.isTransitioning = false; 
+        }, 500); 
+      }
+
+      goTo(slideIndex){ 
+        if(this.isTransitioning) return; 
+        this.isTransitioning = true;
+        this.currentIndex = this.startIndex + slideIndex; 
+        this.update(); 
+        setTimeout(() => { this.isTransitioning = false; }, 500);
+      }
+
+      bind(){
+        this.prevBtn.addEventListener('click', () => this.prev());
+        this.nextBtn.addEventListener('click', () => this.next());
+        
+        this.track.setAttribute('tabindex', '0');
+        this.track.addEventListener('keydown', (e) => {
+          if(e.key === 'ArrowLeft') this.prev();
+          if(e.key === 'ArrowRight') this.next();
+        });
+      }
+
+      setupTouch(){
+        this.track.addEventListener('touchstart', (e) => {
+          this.touchStartX = e.changedTouches[0].screenX;
+          this.touchStartY = e.changedTouches[0].screenY;
+        }, {passive: true});
+        
+        this.track.addEventListener('touchend', (e) => {
+          this.touchEndX = e.changedTouches[0].screenX;
+          this.touchEndY = e.changedTouches[0].screenY;
+          this.handleSwipe();
+        }, {passive: true});
+      }
+
+      handleSwipe(){
+        const diffX = this.touchStartX - this.touchEndX;
+        const diffY = Math.abs(this.touchStartY - this.touchEndY);
+        
+        // Only swipe if horizontal movement is greater than vertical
+        if(Math.abs(diffX) > diffY && Math.abs(diffX) > this.minSwipeDistance){
+          if(diffX > 0){
+            this.next(); // Swipe left
+          } else {
+            this.prev(); // Swipe right
+          }
+        }
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      createParticles();
+      setupScrollIndicator();
+
+      // Skills carousel
+      const skillsCarousel = new Carousel({
+        trackId: 'skillsTrack',
+        dotsId: 'skillsDots',
+        prevBtnId: 'skillsPrev',
+        nextBtnId: 'skillsNext',
+        items: skillsData,
+        renderFunction: renderSkillItem
+      });
+
+      // Projects carousel
+      const projectsCarousel = new Carousel({
+        trackId: 'projectsTrack',
+        dotsId: 'projectsDots',
+        prevBtnId: 'projectsPrev',
+        nextBtnId: 'projectsNext',
+        items: projectsData,
+        renderFunction: renderProjectItem
+      });
+
+      // Certificates carousel
+      const certificatesCarousel = new Carousel({
+        trackId: 'certificatesTrack',
+        dotsId: 'certificatesDots',
+        prevBtnId: 'certificatesPrev',
+        nextBtnId: 'certificatesNext',
+        items: certificatesData,
+        renderFunction: renderCertificateItem
+      });
+
+      // Hero float
+      if(!prefersReducedMotion){
+        const hero = document.querySelector('.hero-content');
+        let rafId; 
+        function float(){ 
+          hero.style.transform = `translateY(${Math.sin(Date.now() * 0.001) * 5}px)`; 
+          rafId = requestAnimationFrame(float);
+        } 
+        rafId = requestAnimationFrame(float);
+        window.addEventListener('beforeunload', () => cancelAnimationFrame(rafId));
+      }
+
+      // Autoplay all carousels
+      setInterval(() => { 
+        if(!skillsCarousel.isTransitioning) skillsCarousel.next(); 
+      }, 4000);
+      
+      setInterval(() => { 
+        if(!projectsCarousel.isTransitioning) projectsCarousel.next(); 
+      }, 5000);
+      
+      setInterval(() => { 
+        if(!certificatesCarousel.isTransitioning) certificatesCarousel.next(); 
+      }, 4500);
+    });
+  </script>
+</body>
+</html>
+      
